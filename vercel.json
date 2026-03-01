@@ -2,7 +2,12 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/**/*.py",
+      "src": "api/files/*.py",
+      "use": "@vercel/python",
+      "config": { "runtime": "python3.11" }
+    },
+    {
+      "src": "api/ai/*.py",
       "use": "@vercel/python",
       "config": { "runtime": "python3.11" }
     },
