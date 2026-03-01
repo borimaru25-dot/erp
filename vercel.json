@@ -4,12 +4,18 @@
     {
       "src": "api/files/*.py",
       "use": "@vercel/python",
-      "config": { "runtime": "python3.11" }
+      "config": {
+        "runtime": "python3.11",
+        "includeFiles": ["api/_lib/**", "api/__init__.py"]
+      }
     },
     {
       "src": "api/ai/*.py",
       "use": "@vercel/python",
-      "config": { "runtime": "python3.11" }
+      "config": {
+        "runtime": "python3.11",
+        "includeFiles": ["api/_lib/**", "api/__init__.py"]
+      }
     },
     {
       "src": "public/**",
