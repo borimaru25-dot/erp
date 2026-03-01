@@ -20,25 +20,25 @@
       "use": "@vercel/static"
     }
   ],
-  "routes": [
-    { "src": "/api/files/temp-upload",     "dest": "/api/files/temp_upload.py" },
-    { "src": "/api/files/temp-list",       "dest": "/api/files/temp_list.py" },
-    { "src": "/api/files/temp/(.*)",       "dest": "/api/files/temp_detail.py" },
+  "rewrites": [
+    { "source": "/api/files/temp-upload",     "destination": "/api/files/temp_upload.py" },
+    { "source": "/api/files/temp-list",       "destination": "/api/files/temp_list.py" },
+    { "source": "/api/files/temp/:id",        "destination": "/api/files/temp_detail.py" },
 
-    { "src": "/api/files/save-final",      "dest": "/api/files/save_final.py" },
-    { "src": "/api/files/final-list",      "dest": "/api/files/final_list.py" },
-    { "src": "/api/files/final/(.*)",      "dest": "/api/files/final_detail.py" },
+    { "source": "/api/files/save-final",      "destination": "/api/files/save_final.py" },
+    { "source": "/api/files/final-list",      "destination": "/api/files/final_list.py" },
+    { "source": "/api/files/final/:id",       "destination": "/api/files/final_detail.py" },
 
-    { "src": "/api/files/save-excel",      "dest": "/api/files/save_excel.py" },
-    { "src": "/api/files/save-excel-data", "dest": "/api/files/save_excel_data.py" },
+    { "source": "/api/files/save-excel",      "destination": "/api/files/save_excel.py" },
+    { "source": "/api/files/save-excel-data", "destination": "/api/files/save_excel_data.py" },
 
-    { "src": "/api/ai/chat",               "dest": "/api/ai/chat.py" },
-    { "src": "/api/ai/generate-slides",    "dest": "/api/ai/generate_slides.py" },
-    { "src": "/api/ai/generate-approval",  "dest": "/api/ai/generate_approval.py" },
+    { "source": "/api/ai/chat",               "destination": "/api/ai/chat.py" },
+    { "source": "/api/ai/generate-slides",    "destination": "/api/ai/generate_slides.py" },
+    { "source": "/api/ai/generate-approval",  "destination": "/api/ai/generate_approval.py" },
 
-    { "src": "/public/(.*)",               "dest": "/public/$1" },
-    { "src": "/pages/(.*)",                "dest": "/pages/$1" },
-    { "src": "/",                          "dest": "/pages/index.html" }
+    { "source": "/public/:path*",             "destination": "/public/:path*" },
+    { "source": "/pages/:path*",              "destination": "/pages/:path*" },
+    { "source": "/",                          "destination": "/pages/index.html" }
   ],
   "headers": [
     {
