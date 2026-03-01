@@ -1,25 +1,19 @@
-"""GET /api/files/final-list — List all final version files."""
+"""GET /api/files/final-list"""
 
-from api._lib.response import json_response, json_error, handle_cors
+from api._lib.vercel_handler import VercelHandler
 from api._lib.supabase_client import get_supabase
 
 
-def handler(request):
-    cors = handle_cors(request)
-    if cors:
-        return cors
-
-    if request.method != "GET":
-        return json_error("Method not allowed", 405)
-
-    try:
-        supabase = get_supabase()
-        result = (
-            supabase.table("file_management")
-            .select("id, name, created_at, updated_at")
-            .order("created_at", desc=True)
-            .execute()
-        )
-        return json_response({"files": result.data})
-    except Exception as e:
-        return json_error(f"Failed to list files: {str(e)}", 500)
+class handler(VercelHandler):
+    def do_GET(self):
+        try:
+            sb = get_supabase()
+            result = (
+                sb.table("file_management")
+                .select("id, name, created_at, updated_at")
+                .order("created_at", desc=True)
+                .execute()
+            )
+            self.send_json({"files": result.data})
+        except Exception as e:
+            self.send_error_json(f"Failed to list files: {e}", 500)

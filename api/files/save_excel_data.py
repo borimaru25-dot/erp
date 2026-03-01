@@ -1,9 +1,7 @@
-"""POST /api/files/save-excel-data — Save modified sheet data as Excel."""
+"""POST /api/files/save-excel-data — Save sheet data as an Excel file."""
 
-import json
 import io
-import base64
-from api._lib.response import json_response, json_error, handle_cors
+from api._lib.vercel_handler import VercelHandler
 from api._lib.supabase_client import get_supabase
 
 try:
@@ -12,70 +10,48 @@ except ImportError:
     openpyxl = None
 
 
-def handler(request):
-    cors = handle_cors(request)
-    if cors:
-        return cors
+class handler(VercelHandler):
+    def do_POST(self):
+        if openpyxl is None:
+            return self.send_error_json("openpyxl not installed", 500)
 
-    if request.method != "POST":
-        return json_error("Method not allowed", 405)
+        body = self.json_body()
+        filename = body.get("filename", "export.xlsx")
+        data = body.get("data")
+        if not data or not data.get("headers"):
+            return self.send_error_json("No data to save")
 
-    if openpyxl is None:
-        return json_error("openpyxl is not installed", 500)
+        try:
+            wb = openpyxl.Workbook()
+            ws = wb.active
+            for col, h in enumerate(data["headers"], 1):
+                ws.cell(row=1, column=col, value=h)
+            for r, row in enumerate(data["rows"], 2):
+                for col, val in enumerate(row, 1):
+                    ws.cell(row=r, column=col, value=val)
 
-    try:
-        body = json.loads(request.body)
-    except (json.JSONDecodeError, TypeError):
-        return json_error("Invalid JSON body")
+            buf = io.BytesIO()
+            wb.save(buf)
+            buf.seek(0)
+            file_bytes = buf.getvalue()
 
-    filename = body.get("filename", "export.xlsx")
-    data = body.get("data")
+            if not filename.endswith(".xlsx"):
+                filename += ".xlsx"
 
-    if not data or not data.get("headers"):
-        return json_error("No data to save")
-
-    try:
-        # Create Excel workbook from data
-        wb = openpyxl.Workbook()
-        ws = wb.active
-
-        # Write headers
-        for col_idx, header in enumerate(data["headers"], 1):
-            ws.cell(row=1, column=col_idx, value=header)
-
-        # Write rows
-        for row_idx, row in enumerate(data["rows"], 2):
-            for col_idx, value in enumerate(row, 1):
-                ws.cell(row=row_idx, column=col_idx, value=value)
-
-        # Save to bytes
-        buffer = io.BytesIO()
-        wb.save(buffer)
-        buffer.seek(0)
-        file_bytes = buffer.getvalue()
-
-        # Upload to storage
-        supabase = get_supabase()
-        if not filename.endswith(".xlsx"):
-            filename += ".xlsx"
-
-        storage_path = f"exports/{filename}"
-        supabase.storage.from_("files").upload(
-            storage_path,
-            file_bytes,
-            {"content-type": "application/vnd.openxmlformats-officedocument"
-                             ".spreadsheetml.sheet",
-             "upsert": "true"},
-        )
-
-        signed = supabase.storage.from_("files").create_signed_url(
-            storage_path, 3600
-        )
-
-        return json_response({
-            "download_url": signed.get("signedURL", ""),
-            "filename": filename,
-            "message": "Excel file saved",
-        })
-    except Exception as e:
-        return json_error(f"Save failed: {str(e)}", 500)
+            sb = get_supabase()
+            storage_path = f"exports/{filename}"
+            sb.storage.from_("files").upload(
+                storage_path, file_bytes,
+                {"content-type": "application/octet-stream",
+                 "upsert": "true"},
+            )
+            signed = sb.storage.from_("files").create_signed_url(
+                storage_path, 3600
+            )
+            self.send_json({
+                "download_url": signed.get("signedURL", ""),
+                "filename": filename,
+                "message": "Excel file saved",
+            })
+        except Exception as e:
+            self.send_error_json(f"Save failed: {e}", 500)

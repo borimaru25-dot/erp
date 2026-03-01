@@ -1,14 +1,8 @@
-"""POST /api/auth/logout — Sign out user."""
+"""POST /api/auth/logout"""
 
-from api._lib.response import json_response, json_error, handle_cors
+from api._lib.vercel_handler import VercelHandler
 
 
-def handler(request):
-    cors = handle_cors(request)
-    if cors:
-        return cors
-
-    if request.method != "POST":
-        return json_error("Method not allowed", 405)
-
-    return json_response({"message": "Logged out successfully"})
+class handler(VercelHandler):
+    def do_POST(self):
+        self.send_json({"message": "Logged out successfully"})
