@@ -16,9 +16,6 @@
     }
   ],
   "routes": [
-    { "src": "/api/auth/login",            "dest": "/api/auth/login.py" },
-    { "src": "/api/auth/logout",           "dest": "/api/auth/logout.py" },
-
     { "src": "/api/files/temp-upload",     "dest": "/api/files/temp_upload.py" },
     { "src": "/api/files/temp-list",       "dest": "/api/files/temp_list.py" },
     { "src": "/api/files/temp/(.*)",       "dest": "/api/files/temp_detail.py" },

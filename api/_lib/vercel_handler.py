@@ -1,15 +1,13 @@
 """Base handler class for Vercel Python serverless functions."""
 
 import json
-import os
 from http.server import BaseHTTPRequestHandler
-from jose import jwt, JWTError
 
 
 class VercelHandler(BaseHTTPRequestHandler):
     """
     Base class for all Vercel Python handlers.
-    Provides JSON request/response helpers and JWT auth.
+    Provides JSON request/response helpers.
     """
 
     # ── Response helpers ──────────────────────────────────────────────
@@ -59,26 +57,6 @@ class VercelHandler(BaseHTTPRequestHandler):
         self.send_response(204)
         self._cors_headers()
         self.end_headers()
-
-    # ── Auth helper ───────────────────────────────────────────────────
-
-    def get_user(self):
-        """
-        Verify Bearer JWT and return payload dict.
-        Returns None and sends 401 if invalid.
-        """
-        auth = self.headers.get("Authorization", "")
-        if not auth.startswith("Bearer "):
-            self.send_error_json("Unauthorized", 401)
-            return None
-
-        token = auth[7:]
-        secret = os.environ.get("JWT_SECRET", "")
-        try:
-            return jwt.decode(token, secret, algorithms=["HS256"])
-        except JWTError:
-            self.send_error_json("Invalid token", 401)
-            return None
 
     # ── Logging (suppress Vercel noise) ──────────────────────────────
 

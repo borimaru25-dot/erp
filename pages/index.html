@@ -10,12 +10,9 @@
 </head>
 <body>
 
-<div class="app-container" id="app">
+<div class="app-container">
   <header class="app-header">
     <h1 class="app-header__title">ERP 대시보드</h1>
-    <div class="app-header__actions">
-      <button class="btn btn--secondary btn--sm" id="btn-logout">로그아웃</button>
-    </div>
   </header>
 
   <aside class="sidebar-left">
@@ -55,17 +52,6 @@
 </div>
 
 <div class="toast-container"></div>
-
-<script type="module">
-  import { isLoggedIn, logout } from '/public/js/core/auth.js';
-
-  if (!isLoggedIn()) {
-    window.location.href = '/pages/login.html';
-  }
-
-  document.getElementById('btn-logout')
-    .addEventListener('click', () => logout());
-</script>
 
 </body>
 </html>
