@@ -1,0 +1,212 @@
+/* ===== Document Manager Module ===== */
+
+/* Upload Area */
+.upload-area {
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+/* File Sections in Sidebar */
+.file-section {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.file-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.file-section__title {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+}
+
+.file-section__count {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.file-section__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-2);
+}
+
+/* Excel Toolbar Specific */
+.excel-toolbar__filename {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text);
+  flex: 1;
+}
+
+.excel-toolbar__status {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+/* AI Chat Specific */
+.ai-chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.ai-chat-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.ai-chat-header__icon {
+  width: 24px;
+  height: 24px;
+  color: var(--color-primary);
+}
+
+.ai-chat-header__title {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+/* AI Wizard Buttons */
+.ai-wizard-bar {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+  background-color: var(--color-bg);
+}
+
+/* Checklist Panel */
+.checklist-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.checklist-panel__header {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.checklist-panel__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-3);
+}
+
+/* Slide Preview */
+.slide-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.slide-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* Approval Document */
+.approval-doc {
+  padding: var(--space-4);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.approval-doc__title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-3);
+  border-bottom: 2px solid var(--color-text);
+}
+
+.approval-doc__field {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-sm);
+}
+
+.approval-doc__label {
+  width: 100px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+.approval-doc__value {
+  flex: 1;
+  color: var(--color-text);
+}
+
+/* Drop Zone */
+.drop-zone {
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.drop-zone:hover,
+.drop-zone.is-dragover {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+.drop-zone__text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.drop-zone__icon {
+  font-size: 1.5rem;
+  margin-bottom: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+/* Loading Overlay */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>문서 관리 - ERP</title>
+  <link rel="stylesheet" href="/public/css/base.css">
+  <link rel="stylesheet" href="/public/css/layout.css">
+  <link rel="stylesheet" href="/public/css/components.css">
+  <link rel="stylesheet" href="/public/css/modules/document-manager.css">
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- ===== Header ===== -->
+  <header class="app-header">
+    <h1 class="app-header__title">문서 관리 시스템</h1>
+    <div class="app-header__actions">
+      <button class="btn btn--primary btn--sm" id="btn-ai-wizard">
+        AI 마법사
+      </button>
+      <button class="btn btn--secondary btn--sm" id="save-excel-btn">
+        엑셀 저장
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== Left Sidebar: AI Chat ===== -->
+  <aside class="sidebar-left">
+    <div class="ai-chat-container">
+
+      <div class="ai-chat-header">
+        <span class="ai-chat-header__icon">🤖</span>
+        <span class="ai-chat-header__title">AI 채팅</span>
+      </div>
+
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-bubble chat-bubble--ai">
+          안녕하세요! 엑셀 데이터 관련 질문이나 작업을 도와드리겠습니다.
+        </div>
+      </div>
+
+      <div class="ai-wizard-bar">
+        <button class="btn btn--sm btn--secondary" id="btn-generate-slides"
+          >PPT 생성</button>
+        <button class="btn btn--sm btn--secondary" id="btn-generate-approval"
+          >결재문서 생성</button>
+      </div>
+
+      <div class="chat-input-area">
+        <input type="text" class="form-input" id="chat-input"
+          placeholder="메시지를 입력하세요...">
+        <button class="btn btn--primary btn--icon" id="chat-send-btn">
+          ➤
+        </button>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- ===== Main Content: Excel Sheet ===== -->
+  <main class="main-content">
+    <div class="split-horizontal">
+
+      <!-- Excel Sheet Area -->
+      <div class="split-horizontal__top">
+        <div class="excel-area">
+          <div class="excel-toolbar">
+            <div class="upload-area">
+              <button class="btn btn--primary btn--sm" id="upload-btn">
+                파일 업로드
+              </button>
+              <input type="file" id="file-input"
+                accept=".xlsx,.xls,.csv" class="hidden">
+            </div>
+            <span class="excel-toolbar__filename" id="toolbar-filename">
+              파일을 선택해주세요
+            </span>
+            <span class="excel-toolbar__status" id="toolbar-status"></span>
+          </div>
+
+          <div class="excel-sheet-wrapper" id="excel-sheet-wrapper">
+            <div class="empty-state">
+              <div class="empty-state__icon">📊</div>
+              <div class="empty-state__text">
+                파일을 업로드하거나 목록에서 선택하여 내용을 확인하세요
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Checklist Area -->
+      <div class="split-horizontal__bottom">
+        <div class="checklist-panel">
+          <div class="checklist-panel__header">
+            <span class="panel-header__title">확인 리스트</span>
+          </div>
+          <div class="checklist-panel__body" id="checklist-body">
+            <div class="empty-state">
+              <div class="empty-state__text">
+                엑셀 데이터가 로드되면 확인 항목이 표시됩니다
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ===== Right Sidebar: File Manager ===== -->
+  <aside class="sidebar-right">
+
+    <!-- Temp Files Section -->
+    <div class="sidebar-right__section">
+      <div class="file-section">
+        <div class="file-section__header">
+          <span class="file-section__title">임시 저장</span>
+          <span class="file-section__count" id="temp-file-count">0</span>
+        </div>
+        <div class="file-section__body" id="temp-file-list">
+          <div class="empty-state">
+            <div class="empty-state__icon">📂</div>
+            <div class="empty-state__text">임시 저장된 파일이 없습니다</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final Files Section -->
+    <div class="sidebar-right__section">
+      <div class="file-section">
+        <div class="file-section__header">
+          <span class="file-section__title">최종본</span>
+          <span class="file-section__count" id="final-file-count">0</span>
+        </div>
+        <div class="file-section__body" id="final-file-list">
+          <div class="empty-state">
+            <div class="empty-state__icon">📁</div>
+            <div class="empty-state__text">최종본 파일이 없습니다</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+</div>
+
+<!-- ===== Temp Save Confirmation Modal ===== -->
+<div class="modal-overlay" id="modal-temp-save">
+  <div class="modal">
+    <div class="modal__header">
+      <h2 class="modal__title">임시 저장</h2>
+      <button class="modal__close" data-modal-close>&times;</button>
+    </div>
+    <div class="modal__body">
+      <p>다음 파일을 임시 저장하시겠습니까?</p>
+      <p><strong id="modal-temp-filename"></strong></p>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--secondary" data-modal-close>취소</button>
+      <button class="btn btn--primary" id="btn-confirm-temp-save">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== AI Wizard Modal ===== -->
+<div class="modal-overlay" id="modal-ai-wizard">
+  <div class="modal modal--full">
+    <div class="modal__header">
+      <h2 class="modal__title">AI 마법사</h2>
+      <button class="modal__close" data-modal-close>&times;</button>
+    </div>
+    <div class="modal__body" id="wizard-body">
+
+      <!-- Wizard Tabs -->
+      <div class="tab-nav">
+        <button class="tab-nav__item is-active" data-tab="wizard-slides">
+          AI 슬라이드
+        </button>
+        <button class="tab-nav__item" data-tab="wizard-approval">
+          AI 결재 문서
+        </button>
+      </div>
+
+      <div class="tab-content">
+        <!-- Slide Tab -->
+        <div class="tab-pane is-active" id="wizard-slides">
+          <div id="slide-preview">
+            <div class="empty-state">
+              <div class="empty-state__icon">📽️</div>
+              <div class="empty-state__text">
+                PPT 생성 버튼을 클릭하여 슬라이드를 생성하세요
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Approval Tab -->
+        <div class="tab-pane" id="wizard-approval">
+          <div id="approval-preview">
+            <div class="empty-state">
+              <div class="empty-state__icon">📝</div>
+              <div class="empty-state__text">
+                결재문서 생성 버튼을 클릭하여 문서를 작성하세요
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== Toast Container ===== -->
+<div class="toast-container"></div>
+
+<!-- ===== Scripts ===== -->
+<script type="module" src="/public/js/modules/document-manager-init.js"></script>
+
+</body>
+</html>

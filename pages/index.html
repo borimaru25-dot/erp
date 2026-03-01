@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ERP 시스템</title>
+  <link rel="stylesheet" href="/public/css/base.css">
+  <link rel="stylesheet" href="/public/css/layout.css">
+  <link rel="stylesheet" href="/public/css/components.css">
+</head>
+<body>
+
+<div class="app-container" id="app">
+  <header class="app-header">
+    <h1 class="app-header__title">ERP 대시보드</h1>
+    <div class="app-header__actions">
+      <button class="btn btn--secondary btn--sm" id="btn-logout">로그아웃</button>
+    </div>
+  </header>
+
+  <aside class="sidebar-left">
+    <div class="panel-header">
+      <span class="panel-header__title">메뉴</span>
+    </div>
+    <div class="panel-body">
+      <ul class="file-list">
+        <li class="file-item">
+          <span class="file-item__icon">📄</span>
+          <a href="/pages/modules/document-manager/index.html"
+            class="file-item__name">문서 관리</a>
+        </li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="empty-state">
+      <div class="empty-state__icon">🏠</div>
+      <div class="empty-state__text">
+        왼쪽 메뉴에서 모듈을 선택해주세요
+      </div>
+    </div>
+  </main>
+
+  <aside class="sidebar-right">
+    <div class="panel-header">
+      <span class="panel-header__title">알림</span>
+    </div>
+    <div class="panel-body">
+      <div class="empty-state">
+        <div class="empty-state__text">새로운 알림이 없습니다</div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="toast-container"></div>
+
+<script type="module">
+  import { isLoggedIn, logout } from '/public/js/core/auth.js';
+
+  if (!isLoggedIn()) {
+    window.location.href = '/pages/login.html';
+  }
+
+  document.getElementById('btn-logout')
+    .addEventListener('click', () => logout());
+</script>
+
+</body>
+</html>
